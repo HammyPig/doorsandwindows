@@ -4,7 +4,6 @@ function quickOrder() {
   
   var invoiceHistory = String(Book.getRange(2, 1, Book.getLastRow(), 1).getValues()).split(",");
   var invoiceLookup = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
-  Logger.log(invoiceLookup);
   
   if (invoiceLookup == 1) {
     var ui = SpreadsheetApp.getUi();

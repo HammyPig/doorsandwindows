@@ -17,7 +17,8 @@ function onOpen() {
   var ui = SpreadsheetApp.getUi();
   var menu = ui.createMenu("Scripts");
   //menu.addItem("Do All", "doAll");
-  menu.addItem("Save Additional Order Info", "specialOrder");
+  menu.addItem("Save Custom Information", "specialOrder");
+  menu.addItem("Save Document Copy", "saveSheet");
   menu.addSeparator();
   menu.addItem("Clear Order", "clearOrder");
   menu.addToUi();
