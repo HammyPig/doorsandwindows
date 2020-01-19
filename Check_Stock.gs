@@ -22,6 +22,6 @@ function checkStock() {
   }
   
   if (orderType == "Order") {
-    SpreadsheetApp.getUi().alert("Warning: Stock not available, an order will need to be placed for this invoice...");
+    UI.alert("Warning: Stock not available, an order will need to be placed for this invoice...");
   }
 }

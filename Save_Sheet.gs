@@ -5,8 +5,7 @@ function saveSheet() {
   var invoiceLookup = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
 
   if (invoiceLookup == 1) {
-    var ui = SpreadsheetApp.getUi();
-    ui.alert("Error: Invoice number does not exist. Please double check the invoice number shown on the document...");  
+    UI.alert("Error: Invoice number does not exist. Please double check the invoice number shown on the document...");  
   } else {
     var destFolder = DriveApp.getFolderById("10q449tW2W8ODKirkfyFcKEBraSNtkPJP"); 
     var newSpreadsheet = DriveApp.getFileById(sheet.getId()).makeCopy(invoiceNumber, destFolder); 

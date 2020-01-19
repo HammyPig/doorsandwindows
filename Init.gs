@@ -2,6 +2,7 @@ function init() {
   date = Utilities.formatDate(new Date(), "UTC+10", "dd/MM/yyyy")
   
   ss = SpreadsheetApp.getActiveSpreadsheet();
+  UI = SpreadsheetApp.getUi();
   Order = ss.getSheets()[0];
   Invoice = ss.getSheets()[1];
   Stock = ss.getSheets()[2];

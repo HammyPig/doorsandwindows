@@ -2,7 +2,7 @@ init();
 
 function doAll() {
   if (isNaN(Order.getRange("A2").getValue())) {
-    SpreadsheetApp.getUi().alert("Warning: Invoice number is invalid... Process cancelled.");
+    UI.alert("Warning: Invoice number is invalid... Process cancelled.");
   } else {
     createInvoice();
     doBooking();
@@ -11,11 +11,22 @@ function doAll() {
 
 function onOpen() {
   init();
+  
+  // Patch notes
+  var newPatch = Order.getRange("A2").getValue();
+  if (newPatch == "ding ding") {
+  var patchNotes = "hello new stuff:\n- Financial book now sorts newest invoices from top to bottom\n- \
+  Reduced loading times\n- Document saving is now optional and is included in the scripts tab, but \
+  you don't really need to save things unless the order is really unique, otherwise just use the search \
+  bar to get old invoices up and press create invoice the usual way"
+  
+  UI.alert(patchNotes);
+  }
+  
   Order.getRange("A2").setValue("Latest: " + String(latestInvoice));
   
   // Setup Menu
-  var ui = SpreadsheetApp.getUi();
-  var menu = ui.createMenu("Scripts");
+  var menu = UI.createMenu("Scripts");
   //menu.addItem("Do All", "doAll");
   menu.addItem("Save Custom Information", "specialOrder");
   menu.addItem("Save Document Copy", "saveSheet");

@@ -1,5 +1,4 @@
 function doBooking() {
-  var ui = SpreadsheetApp.getUi();
   // Find invoice row
   var origin = Book.getLastRow();
   var originNumber = Book.getRange(origin, 1).getValue();
@@ -14,12 +13,12 @@ function doBooking() {
     row = 2;
     var createNew = true;
   } else if (row < 1) {
-    var response = ui.alert("Warning: You are skipping an invoice slot... Are you sure you want to proceed?", ui.ButtonSet.YES_NO);
+    var response = UI.alert("Warning: You are skipping an invoice slot... Are you sure you want to proceed?", UI.ButtonSet.YES_NO);
   } else {
-    var response = ui.alert("Warning: This invoice number already exists, would you like to override the existing information?", ui.ButtonSet.YES_NO);
+    var response = UI.alert("Warning: This invoice number already exists, would you like to override the existing information?", UI.ButtonSet.YES_NO);
   }
   
-  if (response == ui.Button.YES || createNew) {
+  if (response == UI.Button.YES || createNew) {
     // Fill in booking information
     var orderSummary = Order.getRange(5, 1, trolley.length, 2).getValues();
     var paymentStatus = "Not Paid"

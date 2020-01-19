@@ -6,8 +6,7 @@ function quickOrder() {
   var invoiceLookup = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
   
   if (invoiceLookup == 1) {
-    var ui = SpreadsheetApp.getUi();
-    ui.alert("Warning: The invoice you entered could not be found...");
+    UI.alert("Warning: The invoice you entered could not be found...");
   } else {
     Order.getRange(2, 1, 1, 9).setValue("");
     Order.getRange(5, 1, Order.getLastRow(), 3).setValue("");
