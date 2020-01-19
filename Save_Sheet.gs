@@ -1,10 +1,13 @@
 function saveSheet() { 
+  var sheet = SpreadsheetApp.getActiveSpreadsheet();
+  var invoiceNumber = sheet.getRange("Invoice!F11:F11").getValues(); 
   var invoiceHistory = String(Book.getRange(2, 1, Book.getLastRow(), 1).getValues()).split(",");
   var invoiceLookup = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
-  
-  if (invoiceLookup != 1) {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet();
-    var invoiceNumber = sheet.getRange("Invoice!F11:F11").getValues(); 
+
+  if (invoiceLookup == 1) {
+    var ui = SpreadsheetApp.getUi();
+    ui.alert("Error: Invoice number does not exist. Please double check the invoice number shown on the document...");  
+  } else {
     var destFolder = DriveApp.getFolderById("10q449tW2W8ODKirkfyFcKEBraSNtkPJP"); 
     var newSpreadsheet = DriveApp.getFileById(sheet.getId()).makeCopy(invoiceNumber, destFolder); 
     
@@ -20,8 +23,5 @@ function saveSheet() {
     var formattedInvoiceNumber = '=HYPERLINK("https://docs.google.com/spreadsheets/d/' + ssID + '", "' + invoiceNumber + '")';
     
     Book.getRange(invoiceLookup, 1).setValue(formattedInvoiceNumber);
-  } else {
-    var ui = SpreadsheetApp.getUi();
-    ui.alert("Error: Invoice number does not exist. Please double check the invoice number shown on the document...");
   }
 }
