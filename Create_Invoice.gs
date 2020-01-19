@@ -3,7 +3,6 @@ function createInvoice() {
   resetInvoice();
   grabOrder();
   space = Invoice.getRange(16, 1, 1, 7);
-  Logger.log(products);
   
   // Input Basic Invoice Information
   Invoice.getRange("B10").setValue(clientName); //Client Name

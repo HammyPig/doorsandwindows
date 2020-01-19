@@ -11,15 +11,13 @@ function doAll() {
 
 function onOpen() {
   init();
-  Order.getRange("A2").setValue("Latest: " + String(latestInvoice - 1));
+  Order.getRange("A2").setValue("Latest: " + String(latestInvoice));
   
   // Setup Menu
   var ui = SpreadsheetApp.getUi();
   var menu = ui.createMenu("Scripts");
   //menu.addItem("Do All", "doAll");
-  menu.addItem("Clear Invoice", "resetInvoice");
-  menu.addSeparator();
-  menu.addItem("Special Order", "specialOrder");
+  menu.addItem("Save Additional Order Info", "specialOrder");
   menu.addSeparator();
   menu.addItem("Clear Order", "clearOrder");
   menu.addToUi();
