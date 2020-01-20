@@ -1,29 +1,35 @@
 function doBooking() {
   // Find invoice row
-  var origin = Book.getLastRow();
-  var originNumber = Book.getRange(origin, 1).getValue();
-
-  var row = origin - (invoiceNumber - originNumber);
+  var invoiceHistory = String(Book.getRange(2, 1, Book.getLastRow(), 1).getValues()).split(",");
+  var row = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
   
   var createNew = false;
   
   // Verify row
   if (row == 1) {
+    var sure = true;
+    if (invoiceNumber > Book.getRange(2, 1).getValue() + 1) {
+      var response = UI.alert("Warning: You are skipping an invoice slot... Are you sure you want to proceed?", UI.ButtonSet.YES_NO);
+      if (response == UI.Button.NO) {
+        sure = false;
+      }
+    }
+    
+    if (sure) {
     Book.insertRowBefore(2);
     row = 2;
     var createNew = true;
-  } else if (row < 1) {
-    var response = UI.alert("Warning: You are skipping an invoice slot... Are you sure you want to proceed?", UI.ButtonSet.YES_NO);
+    }
   } else {
-    var response = UI.alert("Warning: This invoice number already exists, would you like to override the existing information?", UI.ButtonSet.YES_NO);
+    var response2 = UI.alert("Warning: This invoice number already exists, would you like to override the existing information?", UI.ButtonSet.YES_NO);
   }
   
-  if (response == UI.Button.YES || createNew) {
+  if (response2 == UI.Button.YES || createNew) {
     // Fill in booking information
-    var orderSummary = Order.getRange(5, 1, trolley.length, 2).getValues();
-    var paymentStatus = "Not Paid"
+    var orderSummary = String(Order.getRange(5, 1, trolley.length, 2).getValues());
+    var paymentStatus = "";
     if (amountPaid == invoiceTotal) {
-      paymentStatus = date;
+      paymentStatus = "Paid " + date;
     }
     
     var stockStatus = "Stock";
@@ -34,15 +40,22 @@ function doBooking() {
     Book.getRange(row, 4).setValue(amountPaid);
     Book.getRange(row, 5).setValue("=(INDIRECT(ADDRESS(ROW(), COLUMN()-2)))-(INDIRECT(ADDRESS(ROW(),COLUMN()-1)))");
     Book.getRange(row, 6).setValue(paymentStatus);
-    Book.getRange(row, 8).setValue(clientName);
-    Book.getRange(row, 9).setValue(clientAddress);
-    Book.getRange(row, 10).setValue(clientMobile);
-    Book.getRange(row, 11).setValue(clientEmail);
-    Book.getRange(row, 12).setValue(paymentMethod);
-    Book.getRange(row, 13).setValue(salesPerson);
-    Book.getRange(row, 14).setValue(deliveryType);
-    Book.getRange(row, 15).setValue(leadTime);
-    Book.getRange(row, 16).setValue(stockStatus);
-    Book.getRange(row, 17).setValue(String(orderSummary));
+    if (!(orderSummary.indexOf("wf")+1 || orderSummary.indexOf("ws")+1 || orderSummary.indexOf("df")+1 || orderSummary.indexOf("ds")+1)) {
+      Book.getRange(row, 7).setValue("n/a");
+    } else if (Book.getRange(row, 7).getValue() == "n/a") {
+      Book.getRange(row, 7).setValue("");
+    }
+    Book.getRange(row, 8).setValue("");
+    Book.getRange(row, 9).setValue("");
+    Book.getRange(row, 10).setValue(clientName);
+    Book.getRange(row, 11).setValue(clientAddress);
+    Book.getRange(row, 12).setValue(clientMobile);
+    Book.getRange(row, 13).setValue(clientEmail);
+    Book.getRange(row, 14).setValue(paymentMethod);
+    Book.getRange(row, 15).setValue(salesPerson);
+    Book.getRange(row, 16).setValue(deliveryType);
+    Book.getRange(row, 17).setValue(leadTime);
+    Book.getRange(row, 18).setValue(stockStatus);
+    Book.getRange(row, 19).setValue(orderSummary);
   }
 }
