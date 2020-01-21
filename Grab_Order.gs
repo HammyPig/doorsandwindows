@@ -27,7 +27,8 @@ function grabOrder() {
     var invoiceHistory = String(Book.getRange(2, 1, Book.getLastRow(), 1).getValues()).split(",");
     var row = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
     var customInfo = Book.getRange(row, 20).getValue()
-    if (customInfo != "") {
+    Logger.log(row);
+    if (customInfo != "" && row != 1) {
       customInfo = customInfo.split(",");
       var fillSpecial = 1;
     }

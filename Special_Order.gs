@@ -14,12 +14,13 @@ function specialOrder() {
   }
   
   var invoiceNumber = Number(Invoice.getRange("F11").getValue());
-  var invoiceLookup = invoiceNumber - 1572;
-  Book.getRange(invoiceLookup, 18).setValue(String(customOrderInfo));
+  var invoiceHistory = String(Book.getRange(2, 1, Book.getLastRow(), 1).getValues()).split(",");
+  var invoiceLookup = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
+  Book.getRange(invoiceLookup, 20).setValue(String(customOrderInfo));
   
   var invoiceDiscount = Invoice.getRange(Invoice.getLastRow()-6, 7).getValue();
   var invoicePrice = Invoice.getRange(Invoice.getLastRow()-7, 7).getValue() - invoiceDiscount;
   
   Book.getRange(invoiceLookup, 3).setValue(invoicePrice);
-  Book.getRange(invoiceLookup, 19).setValue(invoiceDiscount);
+  Book.getRange(invoiceLookup, 21).setValue(invoiceDiscount);
 }
