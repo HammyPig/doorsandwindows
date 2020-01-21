@@ -11,17 +11,17 @@ function quickOrder() {
     Order.getRange(2, 1, 1, 9).setValue("");
     Order.getRange(5, 1, Order.getLastRow(), 3).setValue("");
     var paymentPaid = Book.getRange(invoiceLookup, 4).getValue();
-    var clientName = Book.getRange(invoiceLookup, 8).getValue();
-    var clientAddress = Book.getRange(invoiceLookup, 9).getValue();
-    var clientMobile = Book.getRange(invoiceLookup, 10).getValue();
-    var clientEmail = Book.getRange(invoiceLookup, 11).getValue();
-    var paymentType = Book.getRange(invoiceLookup, 12).getValue();
-    var salesPerson = Book.getRange(invoiceLookup, 13).getValue();
-    var deliveryType = Book.getRange(invoiceLookup, 14).getValue();
-    var leadTime = Book.getRange(invoiceLookup, 15).getValue();
+    var clientName = Book.getRange(invoiceLookup, 10).getValue();
+    var clientAddress = Book.getRange(invoiceLookup, 11).getValue();
+    var clientMobile = Book.getRange(invoiceLookup, 12).getValue();
+    var clientEmail = Book.getRange(invoiceLookup, 13).getValue();
+    var paymentType = Book.getRange(invoiceLookup, 14).getValue();
+    var salesPerson = Book.getRange(invoiceLookup, 15).getValue();
+    var deliveryType = Book.getRange(invoiceLookup, 16).getValue();
+    var leadTime = Book.getRange(invoiceLookup, 17).getValue();
     
-    var orderSummary = Book.getRange(invoiceLookup, 17).getValue().split(",");
-    var discountApplied = Book.getRange(invoiceLookup, 19).getValue();
+    var orderSummary = Book.getRange(invoiceLookup, 19).getValue().split(",");
+    var discountApplied = Book.getRange(invoiceLookup, 21).getValue();
     
     Order.getRange("A2").setValue(invoiceNumber);
     Order.getRange("B2").setValue(clientName);
