@@ -24,8 +24,9 @@ function grabOrder() {
   trolley = Order.getRange("A5:A").getValues().filter(String).toString();
   trolley = trolley.split(",");
   if (trolley.indexOf("custom")+1) {
-    var customInfo = Book.getRange(invoiceNumber-1572, 18).getValue()
-    Logger.log(customInfo);
+    var invoiceHistory = String(Book.getRange(2, 1, Book.getLastRow(), 1).getValues()).split(",");
+    var row = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
+    var customInfo = Book.getRange(row, 20).getValue()
     if (customInfo != "") {
       customInfo = customInfo.split(",");
       var fillSpecial = 1;
