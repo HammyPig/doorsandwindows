@@ -7,12 +7,16 @@ function doAll() {
     createInvoice();
     doBooking();
   }
+  latestInvoice();
+}
+
+function latestInvoice() {
+  var latest = Number(Book.getRange(2, 1).getValue());
+  Order.getRange("A2").setValue("Latest: " + String(latest));
 }
 
 function onOpen() {
-  init();
-  
-  Order.getRange("A2").setValue("Latest: " + String(latestInvoice));
+  latestInvoice();
   
   // Setup Menu
   var menu = UI.createMenu("Scripts");

@@ -9,5 +9,4 @@ function init() {
   Book = ss.getSheets()[3];
   
   allStock = Stock.getRange("B2:B").getValues().filter(String);
-  latestInvoice = Number(Book.getRange(2, 1).getValue());
 }
