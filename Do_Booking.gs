@@ -48,7 +48,7 @@ function doBooking() {
     Book.getRange(row, F_STOCKUPDATED).setValue("");
     Book.getRange(row, F_INVOICESTATUS).setValue("");
     Book.getRange(row, F_CLIENTNAME).setValue(clientName);
-    Book.getRange(row, F_CLIENTADDRESS).setValue(clientAddress);
+    Book.getRange(row, F_DELIVERYADDRESS).setValue(clientAddress);
     Book.getRange(row, F_CLIENTMOBILE).setValue(clientMobile);
     Book.getRange(row, F_CLIENTEMAIL).setValue(clientEmail);
     Book.getRange(row, F_PAYMENTMETHOD).setValue(paymentMethod);

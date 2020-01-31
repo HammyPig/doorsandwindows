@@ -13,7 +13,7 @@ function createInvoice() {
   Invoice.getRange("F10").setValue(salesPerson); //Sales Person
   Invoice.getRange("F11").setValue(invoiceNumber); //Invoice Number
   Invoice.getRange("F12").setValue(orderType); //Delivery or Pick-Up
-  Invoice.getRange("F13").setValue(leadTime); //Scheduled Time
+  Invoice.getRange("F13").setValue(scheduledFor); //Scheduled Time
   Invoice.getRange("G17").setValue("=SUM(G16:INDIRECT(ADDRESS(ROW()-1,COLUMN())))"); //Product Subtotal
   //Invoice.getRange("G18").setValue("=(INDIRECT(ADDRESS(ROW()-1,COLUMN())))*0.1"); //GST (10% of subtotal)
   Invoice.getRange("G19").setValue(deliveryCost); //Delivery Cost

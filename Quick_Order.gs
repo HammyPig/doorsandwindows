@@ -18,7 +18,7 @@ function quickOrder() {
     var paymentType = Book.getRange(invoiceLookup, F_PAYMENTMETHOD).getValue();
     var salesPerson = Book.getRange(invoiceLookup, F_SALESPERSON).getValue();
     var deliveryType = Book.getRange(invoiceLookup, F_DELIVERYTYPE).getValue();
-    var leadTime = Book.getRange(invoiceLookup, F_SCHEDULEDFOR).getValue();
+    var scheduledFor = Book.getRange(invoiceLookup, F_SCHEDULEDFOR).getValue();
     
     var orderSummary = Book.getRange(invoiceLookup, F_ORDERSUMMARY).getValue().split(",");
     var discountApplied = Book.getRange(invoiceLookup, F_DISCOUNT).getValue();
@@ -31,7 +31,7 @@ function quickOrder() {
     Order.getRange("F2").setValue(paymentType);
     Order.getRange("G2").setValue(salesPerson);
     Order.getRange("H2").setValue(deliveryType);
-    Order.getRange("I2").setValue(leadTime);
+    Order.getRange("I2").setValue(scheduledFor);
     Order.getRange("J2").setValue(paymentPaid);
     Order.getRange("K2").setValue(discountApplied);
     
