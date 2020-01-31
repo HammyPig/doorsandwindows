@@ -28,7 +28,7 @@ function doBooking() {
     // Fill in booking information
     var orderSummary = String(Order.getRange(5, 1, trolley.length, 2).getValues());
     var paymentStatus = "";
-    if (amountPaid == invoiceTotal) {
+    if (amountPaid >= invoiceTotal) {
       paymentStatus = "Paid " + date;
     }
     
