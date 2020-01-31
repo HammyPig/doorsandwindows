@@ -2,9 +2,9 @@ function updateStockA() {
   var invoiceNumber = Number(Order.getRange("I5").getValue());
   analyseStock(invoiceNumber);
   
-  var invoiceHistory = String(Book.getRange(2, 1, Book.getLastRow(), 1).getValues()).split(",");
+  var invoiceHistory = String(Book.getRange(2, F_INVOICENUMBER, Book.getLastRow(), 1).getValues()).split(",");
   var invoiceLookup = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
-  Order.getRange("J6").setValue(Book.getRange(invoiceLookup, 9).getValue());
+  Order.getRange("J6").setValue(Book.getRange(invoiceLookup, F_INVOICESTATUS).getValue());
 }
 
 function updateStockB() {
@@ -14,19 +14,19 @@ function updateStockB() {
 
 function updatePaid() {
   var invoiceNumber = Number(Invoice.getRange("F11").getValue());
-  var invoiceHistory = String(Book.getRange(2, 1, Book.getLastRow(), 1).getValues()).split(",");
+  var invoiceHistory = String(Book.getRange(2, F_INVOICENUMBER, Book.getLastRow(), 1).getValues()).split(",");
   var invoiceLookup = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
-  Book.getRange(invoiceLookup, 4).setValue(Book.getRange(invoiceLookup, 3).getValue());
-  Book.getRange(invoiceLookup, 6).setValue("Paid " + date);
+  Book.getRange(invoiceLookup, F_AMOUNTPAID).setValue(Book.getRange(invoiceLookup, F_INVOICEAMOUNT).getValue());
+  Book.getRange(invoiceLookup, F_PAYMENTSTATUS).setValue("Paid " + date);
 }
   
 
 function analyseStock(invoiceNumber) {
-  var invoiceHistory = String(Book.getRange(2, 1, Book.getLastRow(), 1).getValues()).split(",");
+  var invoiceHistory = String(Book.getRange(2, F_INVOICENUMBER, Book.getLastRow(), 1).getValues()).split(",");
   var invoiceLookup = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
   var paid = true;
   
-  if (Book.getRange(invoiceLookup, 6).getValue() == "") {
+  if (Book.getRange(invoiceLookup, F_PAYMENTSTATUS).getValue() == "") {
     var response = UI.alert("Note: Customer has not been recorded as paid, are you sure you want to proceed? Financial book will be updated to show customer has paid.", UI.ButtonSet.YES_NO);
     if (response == UI.Button.NO) {
       paid = false;
@@ -34,8 +34,8 @@ function analyseStock(invoiceNumber) {
   }
  
   if (paid) {
-    if (Book.getRange(invoiceLookup, 8).getValue() == "") {
-      var order = Book.getRange(invoiceLookup, 19).getValue().split(",");
+    if (Book.getRange(invoiceLookup, F_STOCKUPDATED).getValue() == "") {
+      var order = Book.getRange(invoiceLookup, F_ORDERSUMMARY).getValue().split(",");
       var trolley = [];
       var quantities = [];
       
@@ -60,25 +60,25 @@ function analyseStock(invoiceNumber) {
           }
         }
       }
-      Book.getRange(invoiceLookup, 8).setValue("Stock Updated");
+      Book.getRange(invoiceLookup, F_STOCKUPDATED).setValue("Stock Updated");
     }
     
-    if (Book.getRange(invoiceLookup, 6).getValue() == "") {
-      Book.getRange(invoiceLookup, 4).setValue(Book.getRange(invoiceLookup, 3).getValue());
-      Book.getRange(invoiceLookup, 6).setValue("Paid " + date);
+    if (Book.getRange(invoiceLookup, F_PAYMENTSTATUS).getValue() == "") {
+      Book.getRange(invoiceLookup, F_AMOUNTPAID).setValue(Book.getRange(invoiceLookup, F_INVOICETOTAL).getValue());
+      Book.getRange(invoiceLookup, F_PAYMENTSTATUS).setValue("Paid " + date);
     }
     
-    var orderSummary = Book.getRange(invoiceLookup, 19).getValue();
+    var orderSummary = Book.getRange(invoiceLookup, F_ORDERSUMMARY).getValue();
     
     if (!((orderSummary.indexOf("wf")+1 || orderSummary.indexOf("ws")+1 || orderSummary.indexOf("df")+1 || orderSummary.indexOf("ds")+1 || orderSummary.indexOf("custom")+1))) {
-      Book.getRange(invoiceLookup, 9).setValue("Completed " + date);
-    } else if (Book.getRange(invoiceLookup, 9).getValue().indexOf("Partial")+1) {
+      Book.getRange(invoiceLookup, F_INVOICESTATUS).setValue("Completed " + date);
+    } else if (Book.getRange(invoiceLookup, F_INVOICESTATUS).getValue().indexOf("Partial")+1) {
       var response = UI.alert("Have screens and/or custom products been delivered?", UI.ButtonSet.YES_NO);
       if (response == UI.Button.YES) {
-        Book.getRange(invoiceLookup, 9).setValue("Completed " + date);
+        Book.getRange(invoiceLookup, F_INVOICESTATUS).setValue("Completed " + date);
       }
     } else {
-      Book.getRange(invoiceLookup, 9).setValue("Partial " + date);
+      Book.getRange(invoiceLookup, F_INVOICESTATUS).setValue("Partial " + date);
     }
     
   } else {

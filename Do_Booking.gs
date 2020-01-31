@@ -1,6 +1,6 @@
 function doBooking() {
   // Find invoice row
-  var invoiceHistory = String(Book.getRange(2, 1, Book.getLastRow(), 1).getValues()).split(",");
+  var invoiceHistory = String(Book.getRange(2, F_INVOICENUMBER, Book.getLastRow(), 1).getValues()).split(",");
   var row = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
   
   var createNew = false;
@@ -8,7 +8,7 @@ function doBooking() {
   // Verify row
   if (row == 1) {
     var sure = true;
-    if (invoiceNumber > Book.getRange(2, 1).getValue() + 1) {
+    if (invoiceNumber > Book.getRange(2, F_INVOICENUMBER).getValue() + 1) {
       var response = UI.alert("Warning: You are skipping an invoice slot... Are you sure you want to proceed?", UI.ButtonSet.YES_NO);
       if (response == UI.Button.NO) {
         sure = false;
@@ -34,28 +34,27 @@ function doBooking() {
     
     var stockStatus = "Stock";
     
-    Book.getRange(row, 1).setValue(invoiceNumber);
-    Book.getRange(row, 2).setValue(date);
-    Book.getRange(row, 3).setValue(invoiceTotal);
-    Book.getRange(row, 4).setValue(amountPaid);
-    Book.getRange(row, 5).setValue("=(INDIRECT(ADDRESS(ROW(), COLUMN()-2)))-(INDIRECT(ADDRESS(ROW(),COLUMN()-1)))");
-    Book.getRange(row, 6).setValue(paymentStatus);
+    Book.getRange(row, F_INVOICENUMBER).setValue(invoiceNumber);
+    Book.getRange(row, F_DATE).setValue(date);
+    Book.getRange(row, F_INVOICETOTAL).setValue(invoiceTotal);
+    Book.getRange(row, F_AMOUNTPAID).setValue(amountPaid);
+    Book.getRange(row, F_AMOUNTDUE).setValue("=(INDIRECT(ADDRESS(ROW(), COLUMN()-2)))-(INDIRECT(ADDRESS(ROW(),COLUMN()-1)))");
+    Book.getRange(row, F_PAYMENTSTATUS).setValue(paymentStatus);
     if (!(orderSummary.indexOf("wf")+1 || orderSummary.indexOf("ws")+1 || orderSummary.indexOf("df")+1 || orderSummary.indexOf("ds")+1)) {
-      Book.getRange(row, 7).setValue("n/a");
-    } else if (Book.getRange(row, 7).getValue() == "n/a") {
-      Book.getRange(row, 7).setValue("");
+      Book.getRange(row, F_SCREENORDER).setValue("n/a");
+    } else if (Book.getRange(row, F_SCREENORDER).getValue() == "n/a") {
+      Book.getRange(row, F_SCREENORDER).setValue("");
     }
-    Book.getRange(row, 8).setValue("");
-    Book.getRange(row, 9).setValue("");
-    Book.getRange(row, 10).setValue(clientName);
-    Book.getRange(row, 11).setValue(clientAddress);
-    Book.getRange(row, 12).setValue(clientMobile);
-    Book.getRange(row, 13).setValue(clientEmail);
-    Book.getRange(row, 14).setValue(paymentMethod);
-    Book.getRange(row, 15).setValue(salesPerson);
-    Book.getRange(row, 16).setValue(deliveryType);
-    Book.getRange(row, 17).setValue(leadTime);
-    Book.getRange(row, 18).setValue(stockStatus);
-    Book.getRange(row, 19).setValue(orderSummary);
+    Book.getRange(row, F_STOCKUPDATED).setValue("");
+    Book.getRange(row, F_INVOICESTATUS).setValue("");
+    Book.getRange(row, F_CLIENTNAME).setValue(clientName);
+    Book.getRange(row, F_CLIENTADDRESS).setValue(clientAddress);
+    Book.getRange(row, F_CLIENTMOBILE).setValue(clientMobile);
+    Book.getRange(row, F_CLIENTEMAIL).setValue(clientEmail);
+    Book.getRange(row, F_PAYMENTMETHOD).setValue(paymentMethod);
+    Book.getRange(row, F_SALESPERSON).setValue(salesPerson);
+    Book.getRange(row, F_DELIVERYTYPE).setValue(deliveryType);
+    Book.getRange(row, F_SCHEDULEDFOR).setValue(scheduledFor);
+    Book.getRange(row, F_ORDERSUMMARY).setValue(orderSummary);
   }
 }

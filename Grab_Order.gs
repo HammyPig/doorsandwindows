@@ -16,7 +16,7 @@ function grabOrder() {
   paymentMethod = Order.getRange("F2").getValue();
   salesPerson = Order.getRange("G2").getValue();
   deliveryType = Order.getRange("H2").getValue();
-  leadTime = Order.getRange("I2").getValue();
+  scheduledFor = Order.getRange("I2").getValue();
   amountPaid = Order.getRange("J2").getValue();
   discountApplied = Order.getRange("K2").getValue();
 
@@ -24,7 +24,7 @@ function grabOrder() {
   trolley = Order.getRange("A5:A").getValues().filter(String).toString();
   trolley = trolley.split(",");
   if (trolley.indexOf("custom")+1) {
-    var invoiceHistory = String(Book.getRange(2, 1, Book.getLastRow(), 1).getValues()).split(",");
+    var invoiceHistory = String(Book.getRange(2, F_INVOICENUMBER, Book.getLastRow(), 1).getValues()).split(",");
     var row = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
     var customInfo = Book.getRange(row, 20).getValue()
     Logger.log(row);

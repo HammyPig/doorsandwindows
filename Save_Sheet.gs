@@ -1,7 +1,7 @@
 function saveSheet() { 
   var sheet = SpreadsheetApp.getActiveSpreadsheet();
   var invoiceNumber = sheet.getRange("Invoice!F11:F11").getValues(); 
-  var invoiceHistory = String(Book.getRange(2, 1, Book.getLastRow(), 1).getValues()).split(",");
+  var invoiceHistory = String(Book.getRange(2, F_INVOICENUMBER, Book.getLastRow(), 1).getValues()).split(",");
   var invoiceLookup = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
 
   if (invoiceLookup == 1) {
@@ -21,6 +21,6 @@ function saveSheet() {
     
     var formattedInvoiceNumber = '=HYPERLINK("https://docs.google.com/spreadsheets/d/' + ssID + '", "' + invoiceNumber + '")';
     
-    Book.getRange(invoiceLookup, 1).setValue(formattedInvoiceNumber);
+    Book.getRange(invoiceLookup, F_INVOICENUMBER).setValue(formattedInvoiceNumber);
   }
 }

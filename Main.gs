@@ -11,7 +11,7 @@ function doAll() {
 }
 
 function latestInvoice() {
-  var latest = Number(Book.getRange(2, 1).getValue());
+  var latest = Book.getRange(2, F_INVOICENUMBER).getValue();
   Order.getRange("A2").setValue("Latest: " + String(latest));
 }
 
