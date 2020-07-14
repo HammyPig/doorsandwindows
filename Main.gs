@@ -1,19 +1,22 @@
-init();
-
 function doAll() {
-  if (isNaN(Order.getRange("A2").getValue())) {
+  var invoice_number = Order.getRange("A2").getValue()
+  
+  if (isNaN(invoice_number)) {
     UI.alert("Warning: Invoice number is invalid... Process cancelled.");
   } else {
     createInvoice();
     doBooking();
   }
+  
   latestInvoice();
 }
 
+
 function latestInvoice() {
-  var latest = Book.getRange(2, F_INVOICENUMBER).getValue();
-  Order.getRange("A2").setValue("Latest: " + String(latest));
+  var latest_invoice = Book.getRange(2, F_INVOICENUMBER).getValue();
+  Order.getRange("A2").setValue("Latest: " + latest_invoice);
 }
+
 
 function onOpen() {
   latestInvoice();

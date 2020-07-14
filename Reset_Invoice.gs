@@ -1,6 +1,4 @@
 function resetInvoice() {
-  init();
-  
   // Reset Purchase List Length
   var lastRow = 28;
   

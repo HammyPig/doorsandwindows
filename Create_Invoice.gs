@@ -1,10 +1,12 @@
 function createInvoice() {
-  // Initialise
   resetInvoice();
-  grabOrder();
-  space = Invoice.getRange(16, 1, 1, 7);
-  
-  // Input Basic Invoice Information
+  getOrder();
+  inputInfo();
+  inputProducts();
+}
+
+
+function inputInfo() {
   Invoice.getRange("B10").setValue(clientName); //Client Name
   Invoice.getRange("B11").setValue(clientAddress); //Client Address
   Invoice.getRange("B12").setValue(clientMobile); //Client Phone Number
@@ -22,7 +24,10 @@ function createInvoice() {
   Invoice.getRange("G22").setValue(discountApplied);
   Invoice.getRange("G23").setValue(amountPaid); //Amount Paid
   Invoice.getRange("G24").setValue("=INDIRECT(ADDRESS(ROW()-3,COLUMN()))-INDIRECT(ADDRESS(ROW()-2,COLUMN()))-INDIRECT(ADDRESS(ROW()-1,COLUMN()))");
+}
 
+
+function inputProducts() {
   // Input Client Products
   Invoice.getRange(16, 1).setValue(products[0]);
   Invoice.getRange(16, 2).setValue(descriptions[0]);
@@ -32,15 +37,17 @@ function createInvoice() {
   
   // Additional Products
   if (trolley.length > 1) {
-    Invoice.insertRowsAfter(16, trolley.length - 1);
-    space.copyFormatToRange(Invoice, 1, 7, 17, 16 + trolley.length - 1);
+    var extraRows = trolley.length - 1
+    Invoice.insertRowsAfter(16, extraRows); // Make room for number of products
+    Invoice.getRange(16, 1, 1, 7).copyFormatToRange(Invoice, 1, 7, 17, 16 + extraRows); // Set extra rows to style
     
-    for (i = 1; i < trolley.length; i++) {
-      Invoice.getRange(16 + i, 1).setValue(products[i]);
-      Invoice.getRange(16 + i, 2).setValue(descriptions[i]);
-      Invoice.getRange(16 + i, 5).setValue(quantities[i]);
-      Invoice.getRange(16 + i, 6).setValue(prices[i]);
-      Invoice.getRange(16 + i, 7).setValue("=E" + String(16 + i) + "*F" + String(16 + i));
+    for (var i = 1; i < trolley.length; i++) {
+      var row = 16 + i
+      Invoice.getRange(row, 1).setValue(products[i]);
+      Invoice.getRange(row, 2).setValue(descriptions[i]);
+      Invoice.getRange(row, 5).setValue(quantities[i]);
+      Invoice.getRange(row, 6).setValue(prices[i]);
+      Invoice.getRange(row, 7).setValue("=E" + String(row) + "*F" + String(row));
     }
   }
 }
