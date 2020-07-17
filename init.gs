@@ -1,4 +1,4 @@
-date = Utilities.formatDate(new Date(), "UTC+10", "dd/MM/yyyy")
+DATE = Utilities.formatDate(new Date(), "UTC+10", "dd/MM/yyyy")
 
 ss = SpreadsheetApp.getActiveSpreadsheet();
 UI = SpreadsheetApp.getUi();
@@ -30,3 +30,25 @@ F_PAYMENTMETHOD = 16;
 F_DISCOUNT = 17;
 F_SALESPERSON = 18;
 F_ORDERSUMMARY = 19;
+
+// Stock
+
+S_ID = 1;
+S_DESCRIPTION = 2;
+S_CODE = 3;
+S_HEIGHT = 4;
+S_WIDTH = 5;
+S_COLOUR = 6;
+S_OPENING = 7;
+S_GLASSTYPE = 8;
+S_COST = 9;
+S_PRICE = 10;
+S_STOCK = 11;
+
+function locateInvoice(invoiceNumber) {
+  var invoiceHistory = String(Book.getRange(2, F_INVOICENUMBER, Book.getLastRow(), 1).getValues()).split(",");
+  var row = invoiceHistory.indexOf(String(invoiceNumber))
+  row += 2
+  
+  return row
+}

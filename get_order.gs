@@ -3,7 +3,7 @@ function getOrder() {
   descriptions = [];
   quantities = [];
   prices = [];
-  deliveryCost = "";
+  deliveryCost = '';
   
   // Invoice Information
   invoiceNumber = Order.getRange("A2").getValue();
@@ -23,8 +23,8 @@ function getOrder() {
   
   // If a custom is included
   if (trolley.indexOf("custom") + 1) {
-    var invoiceHistory = String(Book.getRange(2, F_INVOICENUMBER, Book.getLastRow(), 1).getValues()).split(",");
-    var row = invoiceHistory.indexOf(String(invoiceNumber)) + 2; // Locate custom information
+    var customInfo = ''
+    var row = locateInvoice(invoiceNumber)
     
     if (row != 1) {
       var customInfo = Book.getRange(row, 20).getValue()
@@ -89,5 +89,6 @@ function getOrder() {
   if (!isNaN(deliveryCost)) {
     invoiceTotal += deliveryCost;
   }
+  
   checkStock();
 }
