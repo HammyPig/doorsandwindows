@@ -16,14 +16,15 @@ function inputInfo() {
   Invoice.getRange("F11").setValue(invoiceNumber); //Invoice Number
   Invoice.getRange("F12").setValue(orderType); //Delivery or Pick-Up
   Invoice.getRange("F13").setValue(scheduledFor); //Scheduled Time
-  Invoice.getRange("G17").setValue("=SUM(G16:INDIRECT(ADDRESS(ROW()-1,COLUMN())))"); //Product Subtotal
-  //Invoice.getRange("G18").setValue("=(INDIRECT(ADDRESS(ROW()-1,COLUMN())))*0.1"); //GST (10% of subtotal)
-  Invoice.getRange("G19").setValue(deliveryCost); //Delivery Cost
-  Invoice.getRange("G20").setValue(paymentMethod); //Payment Method
-  Invoice.getRange("G21").setValue("=IF(ISNUMBER(INDIRECT(ADDRESS(ROW()-2,COLUMN()))), (INDIRECT(ADDRESS(ROW()-2,COLUMN())))+(INDIRECT(ADDRESS(ROW()-4,COLUMN()))), (INDIRECT(ADDRESS(ROW()-4,COLUMN()))))"); //Total Cost (subtotal + delivery costs)
-  Invoice.getRange("G22").setValue(discountApplied);
-  Invoice.getRange("G23").setValue(amountPaid); //Amount Paid
-  Invoice.getRange("G24").setValue("=INDIRECT(ADDRESS(ROW()-3,COLUMN()))-INDIRECT(ADDRESS(ROW()-2,COLUMN()))-INDIRECT(ADDRESS(ROW()-1,COLUMN()))");
+  Invoice.getRange("G17").setValue('=SUM(G16:INDIRECT(ADDRESS(ROW()-1,COLUMN())))'); //Product Subtotal
+  Invoice.getRange('E18').setValue(`DELIVERY: ${deliveryType}`) // Delivery Type
+  Invoice.getRange("G18").setValue(deliveryCost); //Delivery Cost
+  Invoice.getRange("G19").setValue('=(INDIRECT(ADDRESS(ROW()+1,COLUMN())))/11'); //GST (10% of subtotal)
+  Invoice.getRange("G20").setValue('=IF(ISNUMBER(INDIRECT(ADDRESS(ROW()-2,COLUMN()))), (INDIRECT(ADDRESS(ROW()-2,COLUMN())))+(INDIRECT(ADDRESS(ROW()-3,COLUMN()))), (INDIRECT(ADDRESS(ROW()-3,COLUMN()))))'); //Total Cost (subtotal + delivery costs)
+  Invoice.getRange("G21").setValue(discountApplied);
+  Invoice.getRange("G22").setValue(amountPaid); //Amount Paid
+  Invoice.getRange("G23").setValue("=INDIRECT(ADDRESS(ROW()-3,COLUMN()))-INDIRECT(ADDRESS(ROW()-2,COLUMN()))-INDIRECT(ADDRESS(ROW()-1,COLUMN()))");
+  Invoice.getRange("G24").setValue(paymentMethod); //Payment Method
 }
 
 

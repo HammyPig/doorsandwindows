@@ -2,7 +2,7 @@ function doAll() {
   var invoice_number = Order.getRange("A2").getValue()
   
   if (isNaN(invoice_number)) {
-    UI.alert("Warning: Invoice number is invalid... Process cancelled.");
+    UI.alert("Warning: Invoice number is not a number... Process cancelled.");
   } else {
     createInvoice();
     doBooking();
@@ -27,8 +27,9 @@ function onOpen() {
   menu.addItem("Save Document Copy", "saveSheet");
   menu.addSeparator();
   menu.addItem("Invoice Paid", "updatePaid");
-  menu.addItem("Update Stock/Invoice Complete", "updateStockB");
+  menu.addItem("Update Stock/Invoice Complete", "invoiceUpdateStock");
   menu.addSeparator();
   menu.addItem("Clear Order", "clearOrder");
+  menu.addItem('Clear Invoice', 'resetInvoice');
   menu.addToUi();
 }

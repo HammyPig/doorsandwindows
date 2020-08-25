@@ -1,11 +1,10 @@
 function checkStatus() {
   var invoiceNumber = Number(Order.getRange("I5").getValue());
+  var row = locateInvoice(invoiceNumber);
   
-  var invoiceHistory = String(Book.getRange(2, F_INVOICENUMBER, Book.getLastRow(), 1).getValues()).split(",");
-  var invoiceLookup = invoiceHistory.indexOf(String(invoiceNumber)) + 2;
-  var status = Book.getRange(invoiceLookup, F_INVOICESTATUS).getValue();
-  if (status == "") {
-    status = "Nothing Received";
+  var status = Book.getRange(row, F_INVOICESTATUS).getValue();
+  if (status == '') {
+    status = 'No Actions Taken';
   }
-  Order.getRange("J6").setValue(status);
+  Order.getRange("I6").setValue(status);
 }

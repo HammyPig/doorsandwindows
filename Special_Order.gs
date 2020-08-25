@@ -20,8 +20,8 @@ function specialOrder() {
       Book.getRange(invoiceLookup, 20).setValue(String(customOrderInfo));
   }
   
-  var invoiceDiscount = Invoice.getRange(Invoice.getLastRow()-6, 7).getValue();
-  var invoicePrice = Invoice.getRange(Invoice.getLastRow()-7, 7).getValue() - invoiceDiscount;
+  var invoiceDiscount = Invoice.getRange(Invoice.getLastRow()-7, 7).getValue();
+  var invoicePrice = Invoice.getRange(Invoice.getLastRow()-8, 7).getValue() - invoiceDiscount;
   
   Book.getRange(invoiceLookup, F_INVOICETOTAL).setValue(invoicePrice);
   Book.getRange(invoiceLookup, F_DISCOUNT).setValue(invoiceDiscount);

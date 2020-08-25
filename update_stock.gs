@@ -58,8 +58,8 @@ function updateStock(invoiceNumber) {
       // Subtract quantities from stock count
       for (var i = 0; i < products.length; i++) {
         var stockRow = allStock.indexOf(products[i])
-        var existingStock = Stock.getRange(stockRow, F_STOCK).getValue();
-        Stock.getRange(stockRow, F_STOCK).setValue(existingStock - quantities[i])
+        var existingStock = Stock.getRange(stockRow, S_STOCK).getValue();
+        Stock.getRange(stockRow, S_STOCK).setValue(existingStock - quantities[i])
       }
       
       // Mark invoice as stock updated

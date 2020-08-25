@@ -2,10 +2,10 @@ DATE = Utilities.formatDate(new Date(), "UTC+10", "dd/MM/yyyy")
 
 ss = SpreadsheetApp.getActiveSpreadsheet();
 UI = SpreadsheetApp.getUi();
-Order = ss.getSheetByName("Order");
-Invoice = ss.getSheetByName("Invoice");
-Stock = ss.getSheetByName("Stock");
-Book = ss.getSheetByName("Financial Book");
+Order = ss.getSheetByName('Order');
+Invoice = ss.getSheetByName('Invoice');
+Stock = ss.getSheetByName('Stock');
+Book = ss.getSheetByName('Financial Book');
 
 allStock = Stock.getRange("A2:A").getValues().filter(String);
 allStock = allStock.map(function (r) { return r[0]; });
@@ -32,7 +32,6 @@ F_SALESPERSON = 18;
 F_ORDERSUMMARY = 19;
 
 // Stock
-
 S_ID = 1;
 S_DESCRIPTION = 2;
 S_CODE = 3;
