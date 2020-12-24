@@ -1,6 +1,6 @@
 function quickOrder() {
   
-  var invoiceNumber = Number(Order.getRange("L2").getValue());
+  var invoiceNumber = Number(Order.getRange("N2").getValue());
   
   var invoiceHistory = String(Book.getRange(2, F_INVOICENUMBER, Book.getLastRow(), 1).getValues()).split(",");
   var invoiceLookup = invoiceHistory.indexOf(String(invoiceNumber)) + 2;

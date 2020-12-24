@@ -3,7 +3,7 @@ function resetInvoice() {
   var lastRow = 28;
   
   if (Invoice.getLastRow() > lastRow) {
-    Invoice.deleteRows(17, Invoice.getLastRow() - lastRow);
+    Invoice.deleteRows(16, Invoice.getLastRow() - lastRow);
   }
   
   // Reset Purchase List Contents
@@ -31,4 +31,5 @@ function resetInvoice() {
   Invoice.getRange("G22").setValue("");
   Invoice.getRange("G23").setValue("");
   Invoice.getRange("G24").setValue("");
+  Invoice.getRange("G25").setValue("");
 }

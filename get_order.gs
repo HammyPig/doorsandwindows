@@ -17,6 +17,7 @@ function getOrder() {
   scheduledFor = Order.getRange("I2").getValue();
   amountPaid = Order.getRange("J2").getValue();
   discountApplied = Order.getRange("K2").getValue();
+  referral = Order.getRange("L2").getValue();
 
   // Get products ordered
   trolley = Order.getRange("A5:A").getValues().filter(String).toString().split(",");
@@ -51,7 +52,7 @@ function getOrder() {
     
     if (product == "custom" && customInfo != '' && customRow < customInfo.length) {
       products.push("Custom Order");
-      descriptions.push(customInfo[customRow].replace("|", ","));
+      descriptions.push(customInfo[customRow].replace(/\|/g, ","));
       prices.push(customInfo[customRow + 1]);
       customRow += 2;
     } else {

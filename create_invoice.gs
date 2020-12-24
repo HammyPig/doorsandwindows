@@ -19,12 +19,17 @@ function inputInfo() {
   Invoice.getRange("G17").setValue('=SUM(G16:INDIRECT(ADDRESS(ROW()-1,COLUMN())))'); //Product Subtotal
   Invoice.getRange('E18').setValue(`DELIVERY: ${deliveryType}`) // Delivery Type
   Invoice.getRange("G18").setValue(deliveryCost); //Delivery Cost
-  Invoice.getRange("G19").setValue('=(INDIRECT(ADDRESS(ROW()+1,COLUMN())))/11'); //GST (10% of subtotal)
-  Invoice.getRange("G20").setValue('=IF(ISNUMBER(INDIRECT(ADDRESS(ROW()-2,COLUMN()))), (INDIRECT(ADDRESS(ROW()-2,COLUMN())))+(INDIRECT(ADDRESS(ROW()-3,COLUMN()))), (INDIRECT(ADDRESS(ROW()-3,COLUMN()))))'); //Total Cost (subtotal + delivery costs)
-  Invoice.getRange("G21").setValue(discountApplied);
-  Invoice.getRange("G22").setValue(amountPaid); //Amount Paid
-  Invoice.getRange("G23").setValue("=INDIRECT(ADDRESS(ROW()-3,COLUMN()))-INDIRECT(ADDRESS(ROW()-2,COLUMN()))-INDIRECT(ADDRESS(ROW()-1,COLUMN()))");
-  Invoice.getRange("G24").setValue(paymentMethod); //Payment Method
+  Invoice.getRange("G19").setValue('=(INDIRECT(ADDRESS(ROW()+3,COLUMN())))/11'); //GST (10% of subtotal)
+  Invoice.getRange("G20").setValue(paymentMethod); //Payment Method
+  if (paymentMethod == "Card") {
+    Invoice.getRange("G21").setValue("=0.02*(INDIRECT(ADDRESS(ROW()-3,COLUMN()))+INDIRECT(ADDRESS(ROW()-4,COLUMN())))"); //Surcharge
+  } else {
+    Invoice.getRange("G21").setValue("n/a");
+  }
+  Invoice.getRange("G22").setValue('=IF(ISNUMBER(INDIRECT(ADDRESS(ROW()-1,COLUMN()))), (INDIRECT(ADDRESS(ROW()-1,COLUMN())))+(INDIRECT(ADDRESS(ROW()-4,COLUMN())))+(INDIRECT(ADDRESS(ROW()-5,COLUMN()))), (INDIRECT(ADDRESS(ROW()-4,COLUMN())))+(INDIRECT(ADDRESS(ROW()-5,COLUMN()))))'); //Total Cost (subtotal + delivery costs)
+  Invoice.getRange("G23").setValue(discountApplied);
+  Invoice.getRange("G24").setValue(amountPaid); //Amount Paid
+  Invoice.getRange("G25").setValue("=INDIRECT(ADDRESS(ROW()-3,COLUMN()))-INDIRECT(ADDRESS(ROW()-2,COLUMN()))-INDIRECT(ADDRESS(ROW()-1,COLUMN()))");
 }
 
 
@@ -39,8 +44,8 @@ function inputProducts() {
   // Fill in product information
   for (var i = 0; i < trolley.length; i++) {
     var row = 16 + i
-    
-    Invoice.getRange(row, 1).setValue(products[i]);
+    var item_num = i + 1
+    Invoice.getRange(row, 1).setValue("ITEM " + item_num + ":\n" + products[i]);
     Invoice.getRange(row, 2).setValue(descriptions[i]);
     Invoice.getRange(row, 5).setValue(quantities[i]);
     Invoice.getRange(row, 6).setValue(prices[i]);

@@ -60,5 +60,6 @@ function doBooking() {
     Book.getRange(row, F_DELIVERYTYPE).setValue(deliveryType);
     Book.getRange(row, F_SCHEDULEDFOR).setValue(scheduledFor);
     Book.getRange(row, F_ORDERSUMMARY).setValue(orderSummary);
+    Book.getRange(row, 27).setValue(referral);
   }
 }
