@@ -72,6 +72,9 @@ function getOrder() {
   
   // Delivery Expenses
   switch (invoiceInfo.deliveryType) {
+    case "Pick Up":
+      invoiceInfo.deliveryCost = 0;
+      break;
     case "0-10 km":
       invoiceInfo.deliveryCost = 99;
       break;
@@ -91,8 +94,8 @@ function getOrder() {
       if (!isNaN(invoiceInfo.deliveryType)) {
         invoiceInfo.deliveryCost = invoiceInfo.deliveryType;
       } else {
-        UI.alert("Error: Delivery type is not recognised and/or is not a number");
-        throw "Error: Delivery type is not recognised and/or is not a number";
+        UI.alert("Error: Delivery type is not recognised... if trying to input a custom delivery cost, please only enter the cost as a number");
+        throw "Error: Delivery type is not recognised... if trying to input a custom delivery cost, please only enter the cost as a number";
       }
   }
   
