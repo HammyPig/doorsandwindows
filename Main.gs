@@ -10,7 +10,7 @@ BOOK = SS.getSheetByName('Financial Book');
 
 STOCK_LIST = STOCK.getRange("A2:A").getValues().filter(String);
 STOCK_LIST = STOCK_LIST.map(function (r) { return r[0]; });
-CARD_SURCHARGE = 0.015; // 1.5%
+CARD_SURCHARGE = 0.01; // 1%
 
 // Order Page
 O_INVOICENUMBER = 1;
@@ -31,7 +31,7 @@ O_STOCKLEVEL = 3;
 O_QUANTITY = 2;
 O_INPUTOFFSET = 2;
 O_NOTES = "I5";
-O_INVOICESTATUS = "I14";
+O_INVOICESTATUS = "I13";
 O_AMOUNTDUE = "N5";
 O_PAYMENTINFO = ORDER.getRange(5, 14, 8, 1);
 

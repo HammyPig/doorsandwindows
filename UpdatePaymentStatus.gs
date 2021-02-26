@@ -18,36 +18,34 @@ function orderUpdatePayment() {
   updateUI(invoiceNumber);
 }
 
-function forcePaymentStatus(invoiceNumber) {
-  var row = locateInvoice(invoiceNumber)
-  if (row == -1) {
-    UI.alert("Error: Invoice not found...\nInvoice cannot be marked as pay when not saved into financial book first");
-    throw "Error: Invoice not found...\nInvoice cannot be marked as pay when not saved into financial book first";
-  }
-  
-  var amountDue = BOOK.getRange(row, B_AMOUNTDUE).getValue();
-  
-  var status = "\n\n" + BOOK.getRange(row, B_INVOICESTATUS).getValue();
-  
+function forcePaymentStatus(row) {
+  // Gets next step
   var nextStep = "pickup/delivery";
-  var containsScreen = UI.alert("Does this order require screens to be ordered?", UI.ButtonSet.YES_NO)
-  if (containsScreen == UI.Button.YES) {
-    nextStep = "screens to be ordered";
+  var containsScreen = orderHasCustom(BOOK.getRange(row, B_ORDERSUMMARY).getValue());
+  if (containsScreen) {
+    nextStep = "screens/customs to be ordered";
   }
   
-  status = `${DATE}: Auto-paid remaining total amount ($${amountDue}), waiting for ${nextStep}${status}`;
   var paymentStatus = `Paid ${DATE}`;
+  var amountDue = BOOK.getRange(row, B_AMOUNTDUE).getValue();
+  var status = "\n\n" + BOOK.getRange(row, B_INVOICESTATUS).getValue();
+  status = `${DATE}: Awaiting ${nextStep}\n${DATE}: Auto-paid remaining total amount ($${amountDue})${status}`;
+  var newAmountPaid = Number(BOOK.getRange(row, B_AMOUNTPAID).getValue()) + Number(amountDue);
   
-  BOOK.getRange(row, B_AMOUNTPAID).setValue(Number(BOOK.getRange(row, B_AMOUNTPAID).getValue()) + Number(amountDue));
+  if (amountDue > 0) {
+    BOOK.getRange(row, B_AMOUNTPAID).setValue(newAmountPaid); // set amount paid to what is required
+  }
+  
   BOOK.getRange(row, B_PAYMENTSTATUS).setValue(paymentStatus);
   BOOK.getRange(row, B_INVOICESTATUS).setValue(status);
-  
-  updateUI(invoiceNumber);
 }
 
-function updateUI(invoiceNumber) {
-  var row = locateInvoice(invoiceNumber);
-  
+function updateUI(row) {
+  var invoiceTotal = BOOK.getRange(row, B_INVOICETOTAL).getValue();
+  var discount = BOOK.getRange(row, B_DISCOUNT).getValue();
+  if (discount == "") {
+    discount = "0";
+  }
   var amountPaid = BOOK.getRange(row, B_AMOUNTPAID).getValue();
   var amountDue = BOOK.getRange(row, B_AMOUNTDUE).getValue();
   var notes = BOOK.getRange(row, B_NOTES).getValue();
@@ -56,6 +54,8 @@ function updateUI(invoiceNumber) {
   ORDER.getRange(O_NOTES).setValue(notes);
   ORDER.getRange(O_INVOICESTATUS).setValue(status);
   
+  ORDER.getRange(5, 14).setValue(amountPaid);
+  ORDER.getRange(6, 14).setValue(discount);
   ORDER.getRange(7, 14).setValue(amountPaid);
   ORDER.getRange(2, O_AMOUNTPAID).setValue(amountPaid);
   ORDER.getRange(8, 14).setValue(amountDue);
@@ -85,9 +85,11 @@ function updatePaymentStatus(invoiceNumber, amountDue, amountPaid) {
   
   var row = locateInvoice(invoiceNumber)
   if (row == -1) {
-    UI.alert("Error: Invoice not found...\nInvoice cannot be marked as pay when not saved into financial book first");
-    throw "Error: Invoice not found...\nInvoice cannot be marked as pay when not saved into financial book first";
+    UI.alert("Error: Invoice not found...\nInvoice cannot be marked as paid when not saved into financial book first");
+    throw "Error: Invoice not found...\nInvoice cannot be marked as paid when not saved into financial book first";
   }
+  
+  var orderSummary = BOOK.getRange(row, B_ORDERSUMMARY).getValue();
   
   // Verifies balance has been paid, otherwise will only mark as a deposit
   var deposit = false;
@@ -110,12 +112,12 @@ function updatePaymentStatus(invoiceNumber, amountDue, amountPaid) {
     var paymentStatus = `Deposit ${DATE}`;
   } else {
     var nextStep = "pickup/delivery";
-    var containsScreen = UI.alert("Does this order require screens to be ordered?", UI.ButtonSet.YES_NO)
-    if (containsScreen == UI.Button.YES) {
-      nextStep = "Screens to be ordered";
+    var containsScreen = orderHasCustom(orderSummary);
+    if (containsScreen) {
+      nextStep = "screens/customs to be ordered";
     }
     
-    status = `${DATE}: Paid total amount ($${amountPaid}), waiting for ${nextStep}${status}`;
+    status = `${DATE}: Awaiting ${nextStep}\n${DATE}: Paid total amount ($${amountPaid})${status}`;
     var paymentStatus = `Paid ${DATE}`;
   }
   

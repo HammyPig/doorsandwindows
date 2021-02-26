@@ -11,7 +11,7 @@ function validateInvoice(invoiceNumber) {
   
     // Check if invoice number is being skipped
     var latestInvoice = BOOK.getRange(2, B_INVOICENUMBER).getValue();
-    if (invoiceNumber != latestInvoice + 1) {
+    if (Number(invoiceNumber) != Number(latestInvoice) + 1) {
       var skipInvoice = UI.alert(`Warning: You are placing an invoice out of order, (latest invoice: ${latestInvoice}, current invoice: ${invoiceNumber}) ... Are you sure you want to proceed?`, UI.ButtonSet.YES_NO);
       if (skipInvoice == UI.Button.NO) {
         return -1;

@@ -9,7 +9,7 @@ function searchInvoice() {
     return;
   }
   
-  clearOrderPage();
+  clearOrder();
   
   // Fill in invoice information
   var invoiceTotal = BOOK.getRange(row, B_INVOICETOTAL).getValue();
@@ -45,6 +45,7 @@ function searchInvoice() {
   ORDER.getRange(O_INVOICESTATUS).setValue(status);
   ORDER.getRange(O_AMOUNTDUE).setValue(amountDue);
   
+  ORDER.getRange("I4").setValue(`Invoice Notes (#${invoiceNumber})`);
   ORDER.getRange(5, 14).setValue(invoiceTotal);
   ORDER.getRange(6, 14).setValue(discount);
   ORDER.getRange(7, 14).setValue(amountPaid);

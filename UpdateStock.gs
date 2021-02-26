@@ -1,42 +1,79 @@
 function orderUpdateStock() {
   var invoiceNumber = ORDER.getRange(2, O_INVOICENUMBER).getValue();
-  updateStock(invoiceNumber);
+  var row = locateInvoice(invoiceNumber)
+  updateStock(row);
   
   // Update UI
-  var row = locateInvoice(invoiceNumber)
   ORDER.getRange(O_INVOICESTATUS).setValue(BOOK.getRange(row, B_INVOICESTATUS).getValue());
 }
 
 function invoiceUpdateStock() {
   var invoiceNumber = INVOICE.getRange(I_INVOICENUMBER).getValue();
-  updateStock(invoiceNumber);
+  var row = locateInvoice(invoiceNumber)
+  updateStock(row);
 }
 
-function updateStock(invoiceNumber) {
-  var row = locateInvoice(invoiceNumber);
-  
+function verifyPaymentMade(row) {
+  // Verify if payment has been made, if not, payment can be overridden
+  var paymentStatus = BOOK.getRange(row, B_PAYMENTSTATUS).getValue()
+  if (!paymentStatus.includes("Paid")) {
+    var payOverride = UI.alert("WARNING: Customer has NOT been recorded as paid, do you wish to FORCE the payment status to PAID?", UI.ButtonSet.OK_CANCEL);
+    if (payOverride == UI.Button.OK) {
+      forcePaymentStatus(row);
+      updateUI(row);
+    } else {
+      UI.alert("Process cancelled... Stock has not been changed");
+      throw "Process cancelled... Stock has not been changed";
+    }
+  }
+}
+
+function updateStock(row) {  
+  // Verify if invoice exists
   if (row == -1) {
     UI.alert(`Error: Invoice '${invoiceNumber}' not found...\nInvoice stock cannot be updated when not saved into financial book first`);
     throw `Error: Invoice '${invoiceNumber}' not found...`;
   }
   
-  var paymentStatus = BOOK.getRange(row, B_PAYMENTSTATUS).getValue()
+  // Verify payment has been made
+  verifyPaymentMade(row);
   
-  if (!paymentStatus.includes('Paid')) {
-    var payOverride = UI.alert("Note: Customer has NOT been recorded as paid, do you wish to FORCE the payment status to PAID?", UI.ButtonSet.OK_CANCEL);
-    
-    if (payOverride == UI.Button.OK) {
-      forcePaymentStatus(invoiceNumber);
+  // Update stock, check if stock is already updated too
+  var orderSummary = BOOK.getRange(row, B_ORDERSUMMARY).getValue();
+  var stockAlreadyUpdated = deductStock(orderSummary, row);
+  
+  // Update invoice status to either completed, completed with screens delivered, or awaiting screens
+  var containsCustom = orderHasCustom(orderSummary);
+  var status = BOOK.getRange(row, B_INVOICESTATUS).getValue();
+  var nextStep = `COMPLETED Order ${DATE}`;
+  
+  if (containsCustom) {
+    // Check if screens/customs have been delivered for invoice to be fully completed
+    var fullyComplete = UI.alert("Have screens and/or custom products been received too?", UI.ButtonSet.YES_NO);
+    if (fullyComplete == UI.Button.YES) {
+      nextStep += `\n${DATE}: Customs/screens have been received`;
     } else {
-      UI.alert("Process cancelled... Stock has not been changed");
-      return;
+      if (stockAlreadyUpdated) {
+        UI.alert("Error: Stock has already been updated for this invoice... Process cancelled");
+        throw "Error: Stock has already been updated for this invoice... Process cancelled";
+      }
+      
+      nextStep = `${DATE}: Partially received, stock has been updated, awaiting customs/screens`;
     }
+  } else if (stockAlreadyUpdated) {
+    UI.alert("Error: Stock has already been updated for this invoice... Process cancelled");
+    throw "Error: Stock has already been updated for this invoice... Process cancelled";
   }
   
+  BOOK.getRange(row, B_INVOICESTATUS).setValue(nextStep + "\n\n" + status);
+}
+
+function deductStock(orderSummary, row) {
   var stockStatus = BOOK.getRange(row, B_STOCKSTATUS).getValue()
-  var orderSummary = BOOK.getRange(row, B_ORDERSUMMARY).getValue();
+  if (stockStatus != "") { 
+    return true; 
+  }
   
-  // Find product quantities
   var order = orderSummary.split(',');
   var products = [];
   var quantities = [];
@@ -46,50 +83,15 @@ function updateStock(invoiceNumber) {
     quantities.push(order[i + 1]);
   }
   
-  /*
-  if (stockStatus != "") {
-    // Add back quantities if stock has been taken previously, so there are no miscounts
-    for (var i = 0; i < products.length; i++) {
-      var stockRow = locateProduct(products[i]);
-      var existingStock = STOCK.getRange(stockRow, S_STOCK).getValue();
-      STOCK.getRange(stockRow, S_STOCK).setValue(existingStock + quantities[i]);
-    }
-  }
-  */
-  
-  var stockUpdated = false;
   // Subtract quantities from stock count
-  if (stockStatus == "") { 
-    for (var i = 0; i < products.length; i++) {
-      var stockRow = locateProduct(products[i]);
-      var existingStock = STOCK.getRange(stockRow, S_STOCK).getValue();
-      STOCK.getRange(stockRow, S_STOCK).setValue(Number(existingStock) - Number(quantities[i]));
-    }
-    
-    // Mark invoice as stock updated
-    BOOK.getRange(row, B_STOCKSTATUS).setValue(`Stock Updated ${DATE}`);
-  } else {
-    stockUpdated = true;
+  for (var i = 0; i < products.length; i++) {
+    var stockRow = locateProduct(products[i]);
+    var existingStock = STOCK.getRange(stockRow, S_STOCK).getValue();
+    STOCK.getRange(stockRow, S_STOCK).setValue(Number(existingStock) - Number(quantities[i]));
   }
   
-  // Update invoice status to either completed, completed with screens delivered, or awaiting screens
-  var containsScreen = orderHasScreen(orderSummary);
-  var status = BOOK.getRange(row, B_INVOICESTATUS).getValue();
-  var nextStep = `${DATE}: COMPLETED Order fully completed`
+  // Mark invoice as stock updated
+  BOOK.getRange(row, B_STOCKSTATUS).setValue(`Stock Updated ${DATE}`);
   
-  if (containsScreen) {
-    // Check if screens/customs have been delivered for invoice to be fully completed
-    var fullyComplete = UI.alert("Have screens and/or custom products been received too?", UI.ButtonSet.YES_NO);
-    if (fullyComplete == UI.Button.YES) {
-      nextStep += `\n${DATE}: Customs/screens have been received`;
-    } else {
-      if (stockUpdated) {
-        UI.alert("Error: Stock has already been updated for this invoice... Process cancelled");
-        throw "Error: Stock has already been updated for this invoice... Process cancelled";
-      }
-      nextStep = `${DATE}: Partially received, stock has been updated, awaiting customs/screens`;
-    }
-  }
-  
-  BOOK.getRange(row, B_INVOICESTATUS).setValue(nextStep + "\n\n" + status);
+  return false;
 }

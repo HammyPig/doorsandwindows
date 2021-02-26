@@ -46,7 +46,7 @@ function getOrder() {
     rows.push(row);
     
     // Get product information
-    if (product == "custom" && customIndex < customInfo.length) {
+    if ((product == "custom" || product == "ds" || product == "df" || product == "ws" || product == "wf") && customIndex < customInfo.length) {
       var product = "Custom Order";
       var description = customInfo[customIndex];
       var price = customInfo[customIndex + 1];
